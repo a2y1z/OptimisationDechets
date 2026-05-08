@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimisation Collecte de Déchets</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Optimisation de la Collecte des Déchets</h1>
+        <p>Entrez vos paramètres pour trouver la solution optimale</p>
+    </div>
+
+    <!-- CHOIX DU MODELE -->
+    <div class="card">
+        <h2>Choisir le modèle</h2>
+        <div class="model-buttons">
+            <button class="model-btn active" onclick="selectModel('1')">
+                Modèle 1<br><small>2 variables (Méthode Graphique)</small>
+            </button>
+            <button class="model-btn" onclick="selectModel('2')">
+                Modèle 2<br><small>3 variables (Simplexe)</small>
+            </button>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE MODELE 1 -->
+    <div id="form1" class="card">
+        <h2>Paramètres — Modèle 1</h2>
+
+        <div class="section-title">Fonction objectif : max Z = c1·x1 + c2·x2</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>c1 — Volume camion standard (m³)</label>
+                <input type="number" id="m1_c1" value="8" placeholder="ex: 8">
+            </div>
+            <div class="form-group">
+                <label>c2 — Volume camion compacteur (m³)</label>
+                <input type="number" id="m1_c2" value="14" placeholder="ex: 14">
+            </div>
+        </div>
+
+        <div class="section-title">Contrainte 1 — Budget : a11·x1 + a12·x2 ≤ b1</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>a11 — Coût camion standard (DH)</label>
+                <input type="number" id="m1_a11" value="60">
+            </div>
+            <div class="form-group">
+                <label>a12 — Coût camion compacteur (DH)</label>
+                <input type="number" id="m1_a12" value="100">
+            </div>
+            <div class="form-group">
+                <label>b1 — Budget max (DH)</label>
+                <input type="number" id="m1_b1" value="600">
+            </div>
+        </div>
+
+        <div class="section-title">Contrainte 2 — Temps : a21·x1 + a22·x2 ≤ b2</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>a21 — Heures camion standard</label>
+                <input type="number" id="m1_a21" value="2">
+            </div>
+            <div class="form-group">
+                <label>a22 — Heures camion compacteur</label>
+                <input type="number" id="m1_a22" value="3">
+            </div>
+            <div class="form-group">
+                <label>b2 — Heures max disponibles</label>
+                <input type="number" id="m1_b2" value="18">
+            </div>
+        </div>
+
+        <div class="section-title">Contrainte 3 — Minimum tournées standards</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>x1 min — Tournées minimum camion standard</label>
+                <input type="number" id="m1_x1min" value="2">
+            </div>
+        </div>
+
+        <button class="solve-btn" onclick="solve()">Résoudre</button>
+    </div>
+
+    <!-- FORMULAIRE MODELE 2 -->
+    <div id="form2" class="card" style="display:none;">
+        <h2>Paramètres — Modèle 2</h2>
+
+        <div class="section-title">Fonction objectif : max Z = c1·x1 + c2·x2 + c3·x3</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>c1 — Volume camion standard (m³)</label>
+                <input type="number" id="m2_c1" value="8">
+            </div>
+            <div class="form-group">
+                <label>c2 — Volume camion compacteur (m³)</label>
+                <input type="number" id="m2_c2" value="14">
+            </div>
+            <div class="form-group">
+                <label>c3 — Volume camionnette légère (m³)</label>
+                <input type="number" id="m2_c3" value="5">
+            </div>
+        </div>
+
+        <div class="section-title">Contrainte 1 — Budget : a11·x1 + a12·x2 + a13·x3 ≤ b1</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>a11 — Coût camion standard (DH)</label>
+                <input type="number" id="m2_a11" value="60">
+            </div>
+            <div class="form-group">
+                <label>a12 — Coût camion compacteur (DH)</label>
+                <input type="number" id="m2_a12" value="100">
+            </div>
+            <div class="form-group">
+                <label>a13 — Coût camionnette légère (DH)</label>
+                <input type="number" id="m2_a13" value="40">
+            </div>
+            <div class="form-group">
+                <label>b1 — Budget max (DH)</label>
+                <input type="number" id="m2_b1" value="600">
+            </div>
+        </div>
+
+        <div class="section-title">Contrainte 2 — Temps : a21·x1 + a22·x2 + a23·x3 ≤ b2</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>a21 — Heures camion standard</label>
+                <input type="number" id="m2_a21" value="2">
+            </div>
+            <div class="form-group">
+                <label>a22 — Heures camion compacteur</label>
+                <input type="number" id="m2_a22" value="3">
+            </div>
+            <div class="form-group">
+                <label>a23 — Heures camionnette légère</label>
+                <input type="number" id="m2_a23" value="1">
+            </div>
+            <div class="form-group">
+                <label>b2 — Heures max disponibles</label>
+                <input type="number" id="m2_b2" value="18">
+            </div>
+        </div>
+
+        <div class="section-title">Contraintes supplémentaires</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>x1 min — Tournées minimum camion standard</label>
+                <input type="number" id="m2_x1min" value="2">
+            </div>
+            <div class="form-group">
+                <label>x3 max — Tournées maximum camionnette</label>
+                <input type="number" id="m2_x3max" value="6">
+            </div>
+        </div>
+
+        <button class="solve-btn" onclick="solve()">Résoudre</button>
+    </div>
+
+    <!-- RESULTAT -->
+    <div id="result" class="card result-card" style="display:none;">
+        <h2>Solution Optimale</h2>
+        <div id="result-content"></div>
+    </div>
+
+</div>
+
+<script>
+    let currentModel = '1';
+
+    function selectModel(m) {
+        currentModel = m;
+        document.getElementById('form1').style.display = m === '1' ? 'block' : 'none';
+        document.getElementById('form2').style.display = m === '2' ? 'block' : 'none';
+        document.getElementById('result').style.display = 'none';
+        document.querySelectorAll('.model-btn').forEach((b, i) => {
+            b.classList.toggle('active', String(i + 1) === m);
+        });
+    }
+
+    function solve() {
+        let payload = { model: currentModel };
+
+        if (currentModel === '1') {
+            payload.c1     = document.getElementById('m1_c1').value;
+            payload.c2     = document.getElementById('m1_c2').value;
+            payload.a11    = document.getElementById('m1_a11').value;
+            payload.a12    = document.getElementById('m1_a12').value;
+            payload.b1     = document.getElementById('m1_b1').value;
+            payload.a21    = document.getElementById('m1_a21').value;
+            payload.a22    = document.getElementById('m1_a22').value;
+            payload.b2     = document.getElementById('m1_b2').value;
+            payload.x1min  = document.getElementById('m1_x1min').value;
+        } else {
+            payload.c1     = document.getElementById('m2_c1').value;
+            payload.c2     = document.getElementById('m2_c2').value;
+            payload.c3     = document.getElementById('m2_c3').value;
+            payload.a11    = document.getElementById('m2_a11').value;
+            payload.a12    = document.getElementById('m2_a12').value;
+            payload.a13    = document.getElementById('m2_a13').value;
+            payload.b1     = document.getElementById('m2_b1').value;
+            payload.a21    = document.getElementById('m2_a21').value;
+            payload.a22    = document.getElementById('m2_a22').value;
+            payload.a23    = document.getElementById('m2_a23').value;
+            payload.b2     = document.getElementById('m2_b2').value;
+            payload.x1min  = document.getElementById('m2_x1min').value;
+            payload.x3max  = document.getElementById('m2_x3max').value;
+        }
+
+        fetch('/solve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById('result');
+            const content = document.getElementById('result-content');
+            box.style.display = 'block';
+
+            if (data.success) {
+                let html = `<div class="result-grid">`;
+                html += `<div class="result-item"><span class="label">x1 — Camion standard</span><span class="value">${data.x1} tournées</span></div>`;
+                html += `<div class="result-item"><span class="label">x2 — Camion compacteur</span><span class="value">${data.x2} tournées</span></div>`;
+                if (data.model === '2') {
+                    html += `<div class="result-item"><span class="label">x3 — Camionnette légère</span><span class="value">${data.x3} tournées</span></div>`;
+                }
+                html += `</div>`;
+                html += `<div class="z-result">Volume maximal collecté : <strong>${data.z} m³</strong></div>`;
+                content.innerHTML = html;
+                box.className = 'card result-card success';
+            } else {
+                content.innerHTML = `<p class="error">${data.error}</p>`;
+                box.className = 'card result-card error';
+            }
+            box.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+</script>
+</body>
+</html>
